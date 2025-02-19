@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server/.
+    container_name: server01
+    restart: always
+    command: bash -c "
+      python3 manage.py migrate &&
+      gunicorn --bind unix:/tmp/gunicorn.sock server.wsgi.deploy:application"
+    volumes:
+      - tmp:/tmp/
+    networks:
+      - server_network
+
+  nginx:
+    build:
+        context: .
+        dockerfile: nginx/Dockerfile
+    container_name: nginx01
+    restart: always
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+#     - "443:443"                          # SSL
+    volumes:
+      - tmp:/tmp/
+#     - /etc/letsencrypt:/etc/letsencrypt  # SSL
+    networks:
+      - server_network
+
+networks:
+  server_network:
+
+volumes:
+  tmp:
+
