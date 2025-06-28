@@ -40,11 +40,6 @@ This project includes pre-configured `nginx.conf`, `Dockerfile`, and `docker-com
 │   ├── Dockerfile
 │   └── nginx.conf
 ├── server (drf_baseline)
-│   ├── server
-│   ├── .env
-│   ├── README.md
-│   ├── Dockerfile
-│   └── manage.py
 ├── README.md
 └── docker-compose.yml
 ```
