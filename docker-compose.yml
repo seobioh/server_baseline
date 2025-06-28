@@ -6,8 +6,11 @@ services:
     container_name: server01
     restart: always
     command: bash -c "
+      python3 manage.py makemigrations &&
       python3 manage.py migrate &&
       gunicorn --bind unix:/tmp/gunicorn.sock server.wsgi.deploy:application"
+    environment:
+      DJANGO_SETTINGS_MODULE: server.settings.deploy
     volumes:
       - tmp:/tmp/
     networks:
@@ -27,6 +30,30 @@ services:
     volumes:
       - tmp:/tmp/
 #     - /etc/letsencrypt:/etc/letsencrypt  # SSL
+    networks:
+      - server_network
+
+  redis:
+    image: redis:7
+    container_name: redis01
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - server_network
+
+  celery:
+    build: ./server/.
+    container_name: celery01
+    restart: always
+    command: celery -A server worker -l info
+    environment:
+      DJANGO_SETTINGS_MODULE: server.settings.deploy
+    volumes:
+      - tmp:/tmp/
+    depends_on:
+      - server
+      - redis
     networks:
       - server_network
 
