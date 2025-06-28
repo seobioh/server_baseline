@@ -6,11 +6,8 @@ services:
     container_name: server01
     restart: always
     command: bash -c "
-      python3 manage.py makemigrations &&
       python3 manage.py migrate &&
       gunicorn --bind unix:/tmp/gunicorn.sock server.wsgi.deploy:application"
-    environment:
-      DJANGO_SETTINGS_MODULE: server.settings.deploy
     volumes:
       - tmp:/tmp/
     networks:
@@ -48,7 +45,7 @@ services:
     restart: always
     command: celery -A server worker -l info
     environment:
-      DJANGO_SETTINGS_MODULE: server.settings.deploy
+      - DJANGO_SETTINGS_MODULE=server.settings.deploy
     volumes:
       - tmp:/tmp/
     depends_on:

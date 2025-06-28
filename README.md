@@ -1,12 +1,20 @@
 # Server Baseline
 
-**Server Baseline** is a NGINX + Django REST Framework (DRF) boilerplate designed to help you quickly set up and start a new Server project.
-  
+**Server Baseline** is a boilerplate project combining NGINX and Django REST Framework (DRF), designed to help you quickly set up a new server project.  
 It provides a structured environment with separate configurations for **development** and **deployment**, ensuring a smooth transition from local testing to production.
 
-It includes pre-configured nginx.conf, Dockerfile and docker-compose.yml.
+This project includes pre-configured `nginx.conf`, `Dockerfile`, and `docker-compose.yml` files.
 
-## 📌 How to Use
+---
+
+## 📦 Features
+
+- 🐳 Docker-Compose included
+- 📧 Optional Celery + Redis integration for background tasks
+
+---
+
+## 📌 Getting Started
 
 1. clone current project.
 2. look README.md from drf_baseline for drf initialization
@@ -23,11 +31,11 @@ It includes pre-configured nginx.conf, Dockerfile and docker-compose.yml.
 - Following files could be missing in your server computer. Search web and download '/etc/letsencrypt/options-ssl-nginx.conf' 'ssl_dhparam /etc/letsencrypt/'ssl-dhparams.pem;
 - docker compose up
 
+---
 
-## 📌 Server Baseline Structure
+## 🗂 Project Structure
 
-.
-
+```text
 ├── nginx
 │   ├── Dockerfile
 │   └── nginx.conf
@@ -39,3 +47,4 @@ It includes pre-configured nginx.conf, Dockerfile and docker-compose.yml.
 │   └── manage.py
 ├── README.md
 └── docker-compose.yml
+```
