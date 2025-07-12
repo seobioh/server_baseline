@@ -16,20 +16,112 @@ This project includes pre-configured `nginx.conf`, `Dockerfile`, and `docker-com
 
 ## 📌 Getting Started
 
-1. clone current project.
-2. look README.md from drf_baseline for drf initialization
-3. For HTTP
-- In 'nginx/nginx.conf' and edit 'domain.yourdomain.com' to your down domain.
-- docker compose up
+### 1. Clone the Project
+```bash
+git clone <your-repository-url>
+cd <your-project-directory>
+```
 
-3. For HTTP & HTTPS
-- In 'nginx/nginx.conf' and remove '# HTTP' and unhash '# HTTPS'.
-- In 'nginx/nginx.conf' and edit 'domain.yourdomain.com' to your down domain.
-- In 'nginx/Dockerfile' unhash '# EXPOSE 443'
-- In 'docker-compose.yml' unhash '# 443:443'  and '# /etc/letsencrypt:/etc/letsencrypt'
-- Install letsencrypt on server computer and get SSL certificates.
-- Following files could be missing in your server computer. Search web and download '/etc/letsencrypt/options-ssl-nginx.conf' 'ssl_dhparam /etc/letsencrypt/'ssl-dhparams.pem;
-- docker compose up
+### 2. Initialize Django REST Framework
+
+- Refer to `server/README.md` (from the `drf_baseline` project) for how to initialize the Django REST Framework backend.
+
+---
+
+### 3. Using an External Database
+
+📄 File: `docker-compose.yml`  
+- Delete the following network section:
+
+```yaml
+services:
+  server:
+    networks:
+      - db_baseline_network               # Internal DB Server
+
+networks:
+  db_baseline_network:                      # Internal DB Server (Remove if External)
+    external: true
+```
+
+---
+
+### 4. HTTP Setup
+
+📄 File: `nginx/nginx.conf`  
+- Replace `domain.yourdomain.com` with your actual domain:
+
+```nginx
+server_name domain.yourdomain.com;
+```
+
+✅ Then run:
+```bash
+docker compose up
+```
+
+---
+
+### 5. HTTP & HTTPS Setup
+
+📄 File: `nginx/nginx.conf`  
+- Remove the `# HTTP` block entirely.  
+- Uncomment the `# HTTPS` block.  
+- Replace `domain.yourdomain.com` with your actual domain:
+
+```nginx
+# HTTPS
+server {
+    listen 443 ssl;
+    server_name domain.yourdomain.com;
+
+    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    ...
+}
+```
+
+📄 File: `nginx/Dockerfile`  
+- Uncomment the following line:
+```dockerfile
+EXPOSE 443
+```
+
+📄 File: `docker-compose.yml`  
+- Uncomment the following lines:
+```yaml
+services:
+  nginx:
+    ports:
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+```
+
+🔐 Issue SSL certificates on your server using Let’s Encrypt:
+```bash
+sudo apt update
+sudo apt install certbot
+sudo certbot certonly --standalone -d yourdomain.com
+```
+
+❗ If missing, download the following files to your server:
+- `/etc/letsencrypt/options-ssl-nginx.conf`
+- `/etc/letsencrypt/ssl-dhparams.pem`
+
+✅ Then run:
+```bash
+docker compose up
+```
+
+---
+
+📎 **Note**  
+- Be sure to replace `yourdomain.com` with your actual domain name.  
+- It’s recommended to configure a cron job to automatically renew your SSL certificates.
 
 ---
 

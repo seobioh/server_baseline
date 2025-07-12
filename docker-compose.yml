@@ -12,6 +12,7 @@ services:
       - tmp:/tmp/
     networks:
       - server_network
+      - db_baseline_network               # Internal DB Server
 
   nginx:
     build:
@@ -56,6 +57,8 @@ services:
 
 networks:
   server_network:
+  db_baseline_network:                      # Internal DB Server (Remove if External)
+    external: true
 
 volumes:
   tmp:
