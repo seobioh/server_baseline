@@ -11,7 +11,7 @@ services:
     volumes:
       - tmp:/tmp/
     networks:
-      - server_network
+      - network
       - db_baseline_network               # Internal DB Server
 
   nginx:
@@ -29,7 +29,7 @@ services:
       - tmp:/tmp/
 #     - /etc/letsencrypt:/etc/letsencrypt  # SSL
     networks:
-      - server_network
+      - network
 
   redis:
     image: redis:7
@@ -38,7 +38,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - server_network
+      - network
 
   celery:
     build: ./server/.
@@ -53,10 +53,10 @@ services:
       - server
       - redis
     networks:
-      - server_network
+      - network
 
 networks:
-  server_network:
+  network:
   db_baseline_network:                      # Internal DB Server (Remove if External)
     external: true
 

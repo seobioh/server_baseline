@@ -28,10 +28,11 @@ cd <your-project-directory>
 
 ---
 
-### 3. Using an External Database
+### 3. Using an Database
 
 📄 File: `docker-compose.yml`  
-- Delete the following network section:
+- Delete the following network section for External DB use:
+- Rename the following network section for Internal DB use:
 
 ```yaml
 services:
